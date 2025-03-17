@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universidad DeYo</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo"><a href="#"><span>U</span>niversidad DeYo</a></div>
+            <ul class="nav-links">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#courses">Cursos</a></li>
+                <li><a href="#about">Nosotros</a></li>
+                <li><a href="#registration">Inscríbete</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+            <div class="burger"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Transforma tu futuro con <span>Universidad DeYo</span></h1>
+            <p>Descubre programas académicos de excelencia diseñados para prepararte para los desafíos del mundo actual.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" id="openRegisterModal">Inscríbete Ahora</button>
+                <a href="#courses" class="btn btn-secondary">Explorar Cursos</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="section-title"><h2>¿Por qué elegirnos?</h2></div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3>Excelencia Académica</h3>
+                <p>Nuestros programas están diseñados por expertos en el campo y se actualizan constantemente para reflejar las últimas tendencias e innovaciones.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>Tecnología de Vanguardia</h3>
+                <p>Contamos con laboratorios equipados con la última tecnología para asegurar una experiencia de aprendizaje práctica y relevante.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Conexiones Globales</h3>
+                <p>Nuestras alianzas internacionales te abren las puertas a intercambios académicos y oportunidades profesionales en todo el mundo.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="courses" class="courses">
+        <div class="courses-container">
+            <div class="section-title"><h2>Nuestros Cursos</h2></div>
+            <div class="filter-controls">
+                <div class="filter-title">Filtrar Cursos</div>
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label for="search-name">Nombre del Curso</label>
+                        <input type="text" id="search-name" class="filter-input" placeholder="Buscar por nombre...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="search-professor">Profesor</label>
+                        <input type="text" id="search-professor" class="filter-input" placeholder="Buscar por profesor...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="search-status">Estado</label>
+                        <select id="search-status" class="filter-input">
+                            <option value="all">Todos</option>
+                            <option value="available">Disponible</option>
+                            <option value="full">Completo</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="courses-grid" id="courses-grid"></div>
+        </div>
+    </section>
+
+    <section id="about" class="features">
+        <div class="section-title"><h2>Acerca de Universidad DeYo</h2></div>
+        <div class="feature-card" style="max-width:800px;margin:0 auto">
+            <p style="text-align:justify;margin-bottom:1.5rem">Universidad DeYo es una institución de educación superior comprometida con la excelencia académica y el desarrollo integral de sus estudiantes. Desde nuestra fundación, hemos trabajado incansablemente para ofrecer programas educativos de alta calidad que preparen a nuestros graduados para enfrentar los desafíos del mundo actual.</p>
+            <p style="text-align:justify;margin-bottom:1.5rem">Nuestra misión es formar profesionales éticos, competentes y comprometidos con la sociedad. Creemos en el potencial transformador de la educación y trabajamos para proporcionar un ambiente de aprendizaje estimulante y enriquecedor.</p>
+            <p style="text-align:justify">Con un cuerpo docente de reconocida trayectoria y una infraestructura de vanguardia, Universidad DeYo se ha posicionado como una de las opciones académicas más prestigiosas de la región. Te invitamos a ser parte de nuestra comunidad y a construir juntos un futuro brillante.</p>
+        </div>
+    </section>
+
+    <section id="registration" class="registration">
+        <div class="section-title"><h2>Inscríbete</h2></div>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="student-tab">Estudiante</button>
+            <button class="tab-btn" data-tab="professor-tab">Profesor</button>
+        </div>
+        <div id="student-tab" class="tab-content active">
+            <form id="student-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="student-name">Nombre Completo</label>
+                        <input type="text" id="student-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-email">Correo Electrónico</label>
+                        <input type="email" id="student-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-dni">DNI / Identificación</label>
+                        <input type="text" id="student-dni" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-phone">Teléfono</label>
+                        <input type="tel" id="student-phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-birth">Fecha de Nacimiento</label>
+                        <input type="date" id="student-birth" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-program">Programa de Interés</label>
+                        <select id="student-program" class="form-control" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="informatica">Ingeniería Informática</option>
+                            <option value="medicina">Medicina</option>
+                            <option value="derecho">Derecho</option>
+                            <option value="psicologia">Psicología</option>
+                            <option value="economia">Economía</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="student-terms" required>
+                    <label for="student-terms">Acepto los términos y condiciones</label>
+                </div>
+                <button type="submit" class="form-submit">Enviar Solicitud</button>
+            </form>
+        </div>
+        <div id="professor-tab" class="tab-content">
+            <form id="professor-form">
+                <div class="form-grid">
+                    <div class="form-group"><label for="professor-name">Nombre Completo</label><input type="text" id="professor-name" class="form-control" required></div>
+                    <div class="form-group"><label for="professor-email">Correo Electrónico</label><input type="email" id="professor-email" class="form-control" required></div>
+                    <div class="form-group"><label for="professor-dni">DNI / Identificación</label><input type="text" id="professor-dni" class="form-control" required></div>
+                    <div class="form-group"><label for="professor-phone">Teléfono</label><input type="tel" id="professor-phone" class="form-control" required></div>
+                    <div class="form-group"><label for="professor-specialty">Especialidad</label><input type="text" id="professor-specialty" class="form-control" required></div>
+                    <div class="form-group"><label for="professor-experience">Años de Experiencia</label><input type="number" id="professor-experience" class="form-control" min="0" required></div>
+                    <div class="form-group"><label for="professor-cv">Currículum Vitae (CV)</label><input type="file" id="professor-cv" class="form-control" accept=".pdf,.doc,.docx"></div>
+                    <div class="form-group"><label for="professor-course">Curso a Impartir</label><input type="text" id="professor-course" class="form-control" required></div>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="professor-terms" required>
+                    <label for="professor-terms">Acepto los términos y condiciones</label>
+                </div>
+                <button type="submit" class="form-submit">Enviar Solicitud</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact" class="features">
+        <div class="section-title"><h2>Contacto</h2></div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📍</div><h3>Dirección</h3><p>Av. Universidad 123, Ciudad Universitaria, CP 12345</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📞</div><h3>Teléfono</h3><p>+123 456 7890</p><p>+123 456 7891</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✉️</div><h3>Correo Electrónico</h3><p>info@universidaddeyo.edu</p><p>admisiones@universidaddeyo.edu</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Universidad DeYo</h3>
+                <p>Formando profesionales de excelencia desde hace más de 30 años. Tu futuro comienza aquí.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">TW</a>
+                    <a href="#" class="social-icon">IG</a>
+                    <a href="#" class="social-icon">LI</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="#home">Inicio</a></li>
+                    <li><a href="#courses">Cursos</a></li>
+                    <li><a href="#about">Nosotros</a></li>
+                    <li><a href="#registration">Inscríbete</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Programas</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Pregrado</a></li>
+                    <li><a href="#">Postgrado</a></li>
+                    <li><a href="#">Educación Continua</a></li>
+                    <li><a href="#">Cursos Online</a></li>
+                    <li><a href="#">Certificaciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Recursos</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Biblioteca</a></li>
+                    <li><a href="#">Campus Virtual</a></li>
+                    <li><a href="#">Calendario Académico</a></li>
+                    <li><a href="#">Becas y Ayudas</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">&copy; 2025 Universidad DeYo. Todos los derechos reservados.</div>
+    </footer>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title">Solicitud de Información</h2>
+            <form id="quick-form">
+                <div class="form-group"><label for="quick-name">Nombre Completo</label><input type="text" id="quick-name" class="form-control" required></div>
+                <div class="form-group"><label for="quick-email">Correo Electrónico</label><input type="email" id="quick-email" class="form-control" required></div>
+                <div class="form-group"><label for="quick-phone">Teléfono</label><input type="tel" id="quick-phone" class="form-control" required></div>
+                <div class="form-group">
+                    <label for="quick-interest">Programa de Interés</label>
+                    <select id="quick-interest" class="form-control" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="informatica">Ingeniería Informática</option>
+                        <option value="medicina">Medicina</option>
+                        <option value="derecho">Derecho</option>
+                        <option value="psicologia">Psicología</option>
+                        <option value="economia">Economía</option>
+                    </select>
+                </div>
+                <button type="submit" class="form-submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">¡Solicitud enviada con éxito! Nos pondremos en contacto contigo pronto.</div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
