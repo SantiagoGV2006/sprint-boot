@@ -1,8 +1,6 @@
 package com.university.crud_basic.model;
 
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -14,15 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "inscription_detail")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class InscriptionDetailDTO {
     
     @Id
@@ -35,9 +27,6 @@ public class InscriptionDetailDTO {
     @Column(name = "id_course")
     private Integer idCourse;
     
-    @Column(name = "final_grade", precision = 5, scale = 2)
-    private BigDecimal finalGrade;
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_course", insertable = false, updatable = false)
     private CourseDTO course;
@@ -47,15 +36,44 @@ public class InscriptionDetailDTO {
     @JsonIgnore // Para evitar ciclos en la serialización JSON
     private InscriptionDTO inscription;
 
+    public Integer getId() {
+        return id;
+    }
+
     public void setId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.id = id;
+    }
+
+    public Integer getIdInscription() {
+        return idInscription;
     }
 
     public void setIdInscription(Integer idInscription) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.idInscription = idInscription;
     }
 
-    public void setInscription(InscriptionDTO savedInscription) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Integer getIdCourse() {
+        return idCourse;
     }
+
+    public void setIdCourse(Integer idCourse) {
+        this.idCourse = idCourse;
+    }
+
+    public CourseDTO getCourse() {
+        return course;
+    }
+
+    public void setCourse(CourseDTO course) {
+        this.course = course;
+    }
+
+    public InscriptionDTO getInscription() {
+        return inscription;
+    }
+
+    public void setInscription(InscriptionDTO inscription) {
+        this.inscription = inscription;
+    }
+
 }

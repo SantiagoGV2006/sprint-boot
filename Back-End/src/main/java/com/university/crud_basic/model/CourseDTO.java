@@ -9,15 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "course")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class CourseDTO {
     
     @Id
@@ -37,7 +31,43 @@ public class CourseDTO {
     @JoinColumn(name = "id_professor", insertable = false, updatable = false)
     private ProfessorDTO professor;
 
-    public void setIdCourse(Object object) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Integer getIdCourse() {
+        return idCourse;
+    }
+
+    public void setIdCourse(Integer idCourse) {
+        this.idCourse = idCourse;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getCredits() {
+        return credits;
+    }
+
+    public void setCredits(Integer credits) {
+        this.credits = credits;
+    }
+
+    public Integer getIdProfessor() {
+        return idProfessor;
+    }
+
+    public void setIdProfessor(Integer idProfessor) {
+        this.idProfessor = idProfessor;
+    }
+
+    public ProfessorDTO getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(ProfessorDTO professor) {
+        this.professor = professor;
     }
 }

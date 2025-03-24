@@ -15,15 +15,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "inscription")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class InscriptionDTO {
     
     @Id
@@ -43,15 +37,43 @@ public class InscriptionDTO {
     @OneToMany(mappedBy = "inscription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscriptionDetailDTO> details = new ArrayList<>();
 
-    public void setIdInscription(Object object) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setIdInscription(Integer idInscription) {
+        this.idInscription = idInscription;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Integer getIdStudent() {
+        return idStudent;
+    }
+
+    public void setIdStudent(Integer idStudent) {
+        this.idStudent = idStudent;
+    }
+
+    public StudentDTO getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentDTO student) {
+        this.student = student;
+    }
+
+    public List<InscriptionDetailDTO> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<InscriptionDetailDTO> details) {
+        this.details = details;
     }
 
     public Integer getIdInscription() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Object getDetails() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return idInscription;
     }
 }

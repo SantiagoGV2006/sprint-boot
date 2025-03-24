@@ -46,6 +46,7 @@ public class InscriptionService {
         
         // Actualizar la inscripción
         inscription.setIdInscription(id);
+        @SuppressWarnings("unused")
         InscriptionDTO updatedInscription = repository.save(inscription);
                 
         return findById(id);
