@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cursos - Sistema Universitario</title>
+    <link rel="stylesheet" href="/Front-End/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">universidad DEYO</div>
+        <ul class="nav-menu">
+            <li><a href="/Front-End/html/index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="/Front-End/html/students.html"><i class="fas fa-user-graduate"></i> Estudiantes</a></li>
+            <li><a href="/Front-End/html/professors.html"><i class="fas fa-chalkboard-teacher"></i> Profesores</a></li>
+            <li><a href="/Front-End/html/courses.html" class="active"><i class="fas fa-book"></i> Cursos</a></li>
+            <li><a href="/Front-End/html/inscriptions.html"><i class="fas fa-clipboard-list"></i> Inscripciones</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="dashboard">
+            <h1><i class="fas fa-book"></i> Gestión de Cursos</h1>
+            
+            <!-- Formulario para crear/editar cursos -->
+            <div class="form-container" id="courseForm">
+                <h2 id="formTitle">Agregar Nuevo Curso</h2>
+                <form id="courseFormElement">
+                    <input type="hidden" id="idCourse" name="idCourse">
+                    
+                    <div class="form-group">
+                        <label for="name">Nombre del Curso*</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="credits">Créditos</label>
+                            <input type="number" id="credits" name="credits" class="form-control" min="1" max="20">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idProfessor">Profesor*</label>
+                            <select id="idProfessor" name="idProfessor" class="form-control" required>
+                                <option value="">Seleccione un profesor</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" id="saveBtn">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelBtn">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tabla de cursos -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Lista de Cursos</h2>
+                    <button id="addCourseBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nuevo Curso
+                    </button>
+                </div>
+                
+                <div class="loader" id="courseLoader"></div>
+                
+                <table id="coursesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Créditos</th>
+                            <th>Profesor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coursesTableBody">
+                        <!-- Los datos serán cargados dinámicamente -->
+                    </tbody>
+                </table>
+                <div id="noCourses" style="display: none; text-align: center; padding: 20px;">
+                    No hay cursos registrados.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modal de confirmación de eliminación -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Eliminación</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <p>¿Está seguro de que desea eliminar este curso? Esta acción no se puede deshacer.</p>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                <button class="btn btn-primary" id="cancelDeleteBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Sistema Universitario - CRUD Spring Boot</p>
+    </footer>
+
+    <script src="/Front-End/js/api.js"></script>
+    <script src="/Front-End/js/courses.js"></script>
+    <script src="/Front-End/js/security.js"></script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package com.university.crud_basic.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -12,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "inscription_detail")
@@ -22,9 +22,11 @@ public class InscriptionDetailDTO {
     private Integer id;
     
     @Column(name = "id_inscription")
+    @NotNull(message = "El ID de inscripción no puede estar vacío")
     private Integer idInscription;
     
     @Column(name = "id_course")
+    @NotNull(message = "El ID del curso no puede estar vacío")
     private Integer idCourse;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -75,5 +77,4 @@ public class InscriptionDetailDTO {
     public void setInscription(InscriptionDTO inscription) {
         this.inscription = inscription;
     }
-
 }

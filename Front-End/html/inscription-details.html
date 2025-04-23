@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Detalles de Inscripción - universidad DEYO</title>
+    <link rel="stylesheet" href="/Front-End/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">universidad DEYO</div>
+        <ul class="nav-menu">
+            <li><a href="/Front-End/html/index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="/Front-End/html/students.html"><i class="fas fa-user-graduate"></i> Estudiantes</a></li>
+            <li><a href="/Front-End/html/professors.html"><i class="fas fa-chalkboard-teacher"></i> Profesores</a></li>
+            <li><a href="/Front-End/html/courses.html"><i class="fas fa-book"></i> Cursos</a></li>
+            <li><a href="/Front-End/html/inscriptions.html"><i class="fas fa-clipboard-list"></i> Inscripciones</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="dashboard">
+            <h1><i class="fas fa-list-alt"></i> Gestión de Detalles de Inscripción</h1>
+
+            <!-- Selector de Inscripción -->
+            <div class="form-container">
+                <h2>Seleccionar Inscripción</h2>
+                <div class="form-group">
+                    <label for="inscription-select">Inscripción:</label>
+                    <select id="inscription-select" class="form-control">
+                        <option value="">Seleccione una inscripción</option>
+                        <!-- Se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div id="inscription-info" style="margin-top: 15px; display: none;">
+                    <!-- Información de la inscripción seleccionada -->
+                </div>
+            </div>
+            
+            <!-- Formulario para agregar detalles -->
+            <div class="form-container" id="detailForm" style="display: none;">
+                <h2>Agregar Curso a la Inscripción</h2>
+                <form id="detailFormElement">
+                    <input type="hidden" id="idInscription" name="idInscription">
+                    
+                    <div class="form-group">
+                        <label for="idCourse">Curso*</label>
+                        <select id="idCourse" name="idCourse" class="form-control" required>
+                            <option value="">Seleccione un curso</option>
+                            <!-- Se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" id="saveBtn">
+                            <i class="fas fa-save"></i> Agregar Curso
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelBtn">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tabla de detalles -->
+            <div class="table-container" id="detailsTable" style="display: none;">
+                <div class="table-header">
+                    <h2>Cursos Inscritos</h2>
+                    <button id="addDetailBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Agregar Curso
+                    </button>
+                </div>
+                
+                <div class="loader" id="detailLoader"></div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Curso</th>
+                            <th>Créditos</th>
+                            <th>Profesor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailsTableBody">
+                        <!-- Los datos serán cargados dinámicamente -->
+                    </tbody>
+                </table>
+                <div id="noDetails" style="display: none; text-align: center; padding: 20px;">
+                    No hay cursos inscritos.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modal de confirmación de eliminación -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Eliminación</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <p>¿Está seguro de que desea eliminar este curso de la inscripción? Esta acción no se puede deshacer.</p>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                <button class="btn btn-primary" id="cancelDeleteBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 universidad DEYO - CRUD Spring Boot</p>
+    </footer>
+
+    <script src="/Front-End/js/api.js"></script>
+    <script src="/Front-End/js/inscription-details.js"></script>
+    <script src="/Front-End/js/security.js"></script>
+</body>
+</html>

@@ -15,6 +15,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 @Entity
 @Table(name = "inscription")
@@ -25,9 +27,12 @@ public class InscriptionDTO {
     private Integer idInscription;
     
     @Column(name = "date")
+    @NotNull(message = "La fecha de inscripción no puede estar vacía")
+    @PastOrPresent(message = "La fecha de inscripción no puede ser futura")
     private LocalDate date;
     
     @Column(name = "id_student")
+    @NotNull(message = "Se debe asignar un estudiante a la inscripción")
     private Integer idStudent;
     
     @ManyToOne(fetch = FetchType.LAZY)

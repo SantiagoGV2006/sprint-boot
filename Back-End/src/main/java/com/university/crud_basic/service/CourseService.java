@@ -45,4 +45,17 @@ public class CourseService {
         repository.deleteById(id);
         return true;
     }
+    
+    // Nuevos métodos para validación
+    public boolean existsById(Integer id) {
+        return repository.existsById(id);
+    }
+    
+    public boolean existsByName(String name) {
+        return repository.existsByNameIgnoreCase(name);
+    }
+    
+    public boolean existsByNameAndIdCourseNot(String name, Integer idCourse) {
+        return repository.existsByNameIgnoreCaseAndIdCourseNot(name, idCourse);
+    }
 }

@@ -1,11 +1,13 @@
 package com.university.crud_basic.service;
 
-import com.university.crud_basic.model.ProfessorDTO;
-import com.university.crud_basic.repository.ProfessorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.university.crud_basic.model.ProfessorDTO;
+import com.university.crud_basic.repository.ProfessorRepository;
 
 @Service
 public class ProfessorService {
@@ -42,5 +44,18 @@ public class ProfessorService {
         
         repository.deleteById(id);
         return true;
+    }
+    
+    // Nuevos métodos para validación
+    public boolean existsById(Integer id) {
+        return repository.existsById(id);
+    }
+    
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+    
+    public boolean existsByEmailAndIdProfessorNot(String email, Integer idProfessor) {
+        return repository.existsByEmailAndIdProfessorNot(email, idProfessor);
     }
 }

@@ -7,4 +7,9 @@ import com.university.crud_basic.model.StudentDTO;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentDTO, Integer> {
+    // Verifica si existe un estudiante con el email proporcionado
+    boolean existsByEmail(String email);
+    
+    // Verifica si existe un estudiante con el email proporcionado que no tenga el ID especificado
+    boolean existsByEmailAndIdStudentNot(String email, Integer idStudent);
 }

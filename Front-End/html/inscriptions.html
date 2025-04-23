@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inscripciones - Sistema Universitario</title>
+    <link rel="stylesheet" href="/Front-End/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Sistema Universitario</div>
+        <ul class="nav-menu">
+            <li><a href="/Front-End/html/index.html"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="/Front-End/html/students.html"><i class="fas fa-user-graduate"></i> Estudiantes</a></li>
+            <li><a href="/Front-End/html/professors.html"><i class="fas fa-chalkboard-teacher"></i> Profesores</a></li>
+            <li><a href="/Front-End/html/courses.html"><i class="fas fa-book"></i> Cursos</a></li>
+            <li><a href="/Front-End/html/inscriptions.html" class="active"><i class="fas fa-clipboard-list"></i> Inscripciones</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="dashboard">
+            <h1><i class="fas fa-clipboard-list"></i> Gestión de Inscripciones</h1>
+            
+            <!-- Formulario para crear/editar inscripciones -->
+            <div class="form-container" id="inscriptionForm">
+                <h2 id="formTitle">Agregar Nueva Inscripción</h2>
+                <form id="inscriptionFormElement">
+                    <input type="hidden" id="idInscription" name="idInscription">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Fecha*</label>
+                            <input type="date" id="date" name="date" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idStudent">Estudiante*</label>
+                            <select id="idStudent" name="idStudent" class="form-control" required>
+                                <option value="">Seleccione un estudiante</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Selección de cursos -->
+                    <div id="courses-container">
+                        <h3>Cursos</h3>
+                        <div class="form-group">
+                            <button type="button" id="addCourseToInscription" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Agregar Curso
+                            </button>
+                        </div>
+                        <div id="selected-courses-container">
+                            <!-- Aquí se agregarán dinámicamente los cursos seleccionados -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" id="saveBtn">
+                            <i class="fas fa-save"></i> Guardar Inscripción
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelBtn">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tabla de inscripciones -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Lista de Inscripciones</h2>
+                    <button id="addInscriptionBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nueva Inscripción
+                    </button>
+                </div>
+                
+                <div class="loader" id="inscriptionLoader"></div>
+                
+                <table id="inscriptionsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Estudiante</th>
+                            <th>Cursos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inscriptionsTableBody">
+                        <!-- Los datos serán cargados dinámicamente -->
+                    </tbody>
+                </table>
+                <div id="noInscriptions" style="display: none; text-align: center; padding: 20px;">
+                    No hay inscripciones registradas.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modal para agregar cursos a la inscripción -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Curso</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="course-select">Seleccione un curso:</label>
+                <select id="course-select" class="form-control">
+                    <option value="">Seleccione un curso</option>
+                    <!-- Se cargarán dinámicamente -->
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="addCourseBtn">Agregar</button>
+                <button class="btn btn-danger" id="cancelCourseBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de confirmación de eliminación -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Eliminación</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <p>¿Está seguro de que desea eliminar esta inscripción? Esta acción no se puede deshacer.</p>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                <button class="btn btn-primary" id="cancelDeleteBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para ver detalles de inscripción -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalles de Inscripción</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div id="inscriptionDetails">
+                <!-- Los detalles se cargarán dinámicamente -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeDetailsBtn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 universidad DEYO - CRUD Spring Boot</p>
+    </footer>
+
+    <script src="/Front-End/js/api.js"></script>
+    <script src="/Front-End/js/inscriptions.js"></script>
+    <script src="/Front-End/js/security.js"></script>
+</body>
+</html>

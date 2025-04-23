@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.university.crud_basic.Exception.DuplicateDataException;
+import com.university.crud_basic.Exception.ResourceNotFoundException;
 import com.university.crud_basic.model.ProfessorDTO;
 import com.university.crud_basic.service.ProfessorService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/professors")
@@ -33,26 +37,46 @@ public class ProfessorController {
     public ResponseEntity<ProfessorDTO> findById(@PathVariable Integer id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Profesor", "id", id));
     }
     
     @PostMapping
-    public ResponseEntity<ProfessorDTO> create(@RequestBody ProfessorDTO professor) {
+    public ResponseEntity<ProfessorDTO> create(@Valid @RequestBody ProfessorDTO professor) {
+        // Verificar si el email ya existe
+        if (professor.getEmail() != null && !professor.getEmail().isEmpty() 
+                && service.existsByEmail(professor.getEmail())) {
+            throw new DuplicateDataException("Profesor", "email", professor.getEmail());
+        }
+        
         ProfessorDTO saved = service.create(professor);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ProfessorDTO> update(@PathVariable Integer id, @RequestBody ProfessorDTO professor) {
+    public ResponseEntity<ProfessorDTO> update(@PathVariable Integer id, @Valid @RequestBody ProfessorDTO professor) {
+        // Verificar si existe el profesor
+        if (!service.existsById(id)) {
+            throw new ResourceNotFoundException("Profesor", "id", id);
+        }
+        
+        // Verificar si el email ya existe y no pertenece a este profesor
+        if (professor.getEmail() != null && !professor.getEmail().isEmpty() 
+                && service.existsByEmailAndIdProfessorNot(professor.getEmail(), id)) {
+            throw new DuplicateDataException("Profesor", "email", professor.getEmail());
+        }
+        
         return service.update(id, professor)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Profesor", "id", id));
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        return service.deleteById(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        if (!service.existsById(id)) {
+            throw new ResourceNotFoundException("Profesor", "id", id);
+        }
+        
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

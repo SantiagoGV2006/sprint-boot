@@ -19,6 +19,10 @@ public class InscriptionDetailService {
         return repository.findAll();
     }
     
+    public Optional<InscriptionDetailDTO> findById(Integer id) {
+        return repository.findById(id);
+    }
+    
     public List<InscriptionDetailDTO> findByInscriptionId(Integer idInscription) {
         return repository.findByIdInscription(idInscription);
     }
@@ -58,9 +62,13 @@ public class InscriptionDetailService {
         repository.deleteAll(details);
         return true;
     }
-
-    public Optional<InscriptionDetailDTO> findById(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    
+    // Nuevos métodos para validación
+    public boolean existsById(Integer id) {
+        return repository.existsById(id);
+    }
+    
+    public boolean existsByIdInscriptionAndIdCourse(Integer idInscription, Integer idCourse) {
+        return repository.existsByIdInscriptionAndIdCourse(idInscription, idCourse);
     }
 }

@@ -1,5 +1,6 @@
 package com.university.crud_basic.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +36,17 @@ public class InscriptionService {
         inscription.setIdInscription(null); // Asegurar que es una nueva entidad
         InscriptionDTO savedInscription = repository.save(inscription);
         
+        // Ahora que tenemos el ID de inscripción, asignarlo a los detalles
+        if (inscription.getDetails() != null && !inscription.getDetails().isEmpty()) {
+            inscription.getDetails().forEach(detail -> {
+                detail.setIdInscription(savedInscription.getIdInscription());
+                // Si necesitas guardar los detalles aquí, puedes hacerlo
+                // detailRepository.save(detail);
+            });
+        }
+        
         return findById(savedInscription.getIdInscription()).orElseThrow();
     }
-    
     @Transactional
     public Optional<InscriptionDTO> update(Integer id, InscriptionDTO inscription) {
         if (!repository.existsById(id)) {
@@ -46,7 +55,6 @@ public class InscriptionService {
         
         // Actualizar la inscripción
         inscription.setIdInscription(id);
-        @SuppressWarnings("unused")
         InscriptionDTO updatedInscription = repository.save(inscription);
                 
         return findById(id);
@@ -65,5 +73,18 @@ public class InscriptionService {
         // Luego eliminar la inscripción
         repository.deleteById(id);
         return true;
+    }
+    
+    // Nuevos métodos para validación
+    public boolean existsById(Integer id) {
+        return repository.existsById(id);
+    }
+    
+    public boolean existsByIdStudentAndDate(Integer idStudent, LocalDate date) {
+        return repository.existsByIdStudentAndDate(idStudent, date);
+    }
+    
+    public boolean existsByIdStudentAndDateAndIdInscriptionNot(Integer idStudent, LocalDate date, Integer idInscription) {
+        return repository.existsByIdStudentAndDateAndIdInscriptionNot(idStudent, date, idInscription);
     }
 }

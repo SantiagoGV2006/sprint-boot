@@ -45,4 +45,17 @@ public class StudentService {
         repository.deleteById(id);
         return true;
     }
+    
+    // Nuevos métodos para validación
+    public boolean existsById(Integer id) {
+        return repository.existsById(id);
+    }
+    
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+    
+    public boolean existsByEmailAndIdStudentNot(String email, Integer idStudent) {
+        return repository.existsByEmailAndIdStudentNot(email, idStudent);
+    }
 }
