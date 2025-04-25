@@ -38,6 +38,10 @@ public class InscriptionDTO {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_student", insertable = false, updatable = false)
     private StudentDTO student;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_course", insertable = false, updatable = false)
+    private CourseDTO course;
     
     @OneToMany(mappedBy = "inscription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscriptionDetailDTO> details = new ArrayList<>();
@@ -80,5 +84,21 @@ public class InscriptionDTO {
 
     public Integer getIdInscription() {
         return idInscription;
+    }
+
+    public Integer getIdCourse() {
+        return idCourse;
+    }
+
+    public void setIdCourse(Integer idCourse) {
+        this.idCourse = idCourse;
+    }
+
+    public CourseDTO getCourse() {
+        return course;
+    }
+
+    public void setCourse(CourseDTO course) {
+        this.course = course;
     }
 }

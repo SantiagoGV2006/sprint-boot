@@ -19,9 +19,7 @@ public class corsConfig {
         // // config.addAllowedOrigin("*");
         // config.addAllowedOrigin("http://127.0.0.1:5500");
         config.addAllowedOrigin("http://127.0.0.1:5500");
-        config.addAllowedOrigin("http://172.30.5.79:5500");
-        config.addAllowedOrigin("http://172.30.7.93:5501");
-        config.addAllowedOrigin("http://localhost:5501"); // o el que estés usando
+        config.addAllowedOrigin("http://172.30.7.93:5500"); // o el que estés usando
         // config.addAllowedOrigin("http://172.30.7.20:5500");
         
         // config.addAllowedOrigin("n cantidad de servidores");

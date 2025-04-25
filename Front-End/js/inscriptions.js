@@ -24,17 +24,17 @@ const courseModal = document.getElementById('courseModal');
 const courseSelect = document.getElementById('course-select');
 const addCourseBtn = document.getElementById('addCourseBtn');
 const cancelCourseBtn = document.getElementById('cancelCourseBtn');
-const closeCourseModal = courseModal.querySelector('.close-modal');
+const closeCourseModal = courseModal ? courseModal.querySelector('.close-modal') : null;
 
 const deleteModal = document.getElementById('deleteModal');
 const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-const closeDeleteModal = deleteModal.querySelector('.close-modal');
+const closeDeleteModal = deleteModal ? deleteModal.querySelector('.close-modal') : null;
 
 const detailsModal = document.getElementById('detailsModal');
 const inscriptionDetails = document.getElementById('inscriptionDetails');
 const closeDetailsBtn = document.getElementById('closeDetailsBtn');
-const closeDetailsModal = detailsModal.querySelector('.close-modal');
+const closeDetailsModal = detailsModal ? detailsModal.querySelector('.close-modal') : null;
 
 // Función para cargar la lista de inscripciones
 async function loadInscriptions() {
@@ -73,6 +73,12 @@ async function loadCourses() {
 
 // Función para llenar el select de estudiantes
 function populateStudentSelect() {
+    // Verificar que el elemento select existe
+    if (!studentSelect) {
+        console.error('Elemento studentSelect no encontrado');
+        return;
+    }
+    
     // Limpiar opciones actuales excepto la primera
     while (studentSelect.options.length > 1) {
         studentSelect.remove(1);
@@ -89,6 +95,12 @@ function populateStudentSelect() {
 
 // Función para llenar el select de cursos
 function populateCourseSelect() {
+    // Verificar que el elemento select existe
+    if (!courseSelect) {
+        console.error('Elemento courseSelect no encontrado');
+        return;
+    }
+    
     // Limpiar opciones actuales excepto la primera
     while (courseSelect.options.length > 1) {
         courseSelect.remove(1);
@@ -105,14 +117,24 @@ function populateCourseSelect() {
 
 // Función para renderizar la tabla de inscripciones
 function renderInscriptionsTable() {
-    inscriptionsTableBody.innerHTML = '';
-    
-    if (inscriptions.length === 0) {
-        noInscriptions.style.display = 'block';
+    // Verificar que el elemento table body existe
+    if (!inscriptionsTableBody) {
+        console.error('Elemento inscriptionsTableBody no encontrado');
         return;
     }
     
-    noInscriptions.style.display = 'none';
+    inscriptionsTableBody.innerHTML = '';
+    
+    if (!noInscriptions) {
+        console.error('Elemento noInscriptions no encontrado');
+    } else {
+        if (inscriptions.length === 0) {
+            noInscriptions.style.display = 'block';
+            return;
+        }
+        
+        noInscriptions.style.display = 'none';
+    }
     
     inscriptions.forEach(inscription => {
         const row = document.createElement('tr');
@@ -213,6 +235,13 @@ async function handleViewInscription(event) {
         toggleLoader(true);
         const inscription = await api.inscriptions.getById(inscriptionId);
         
+        // Verificar que el elemento inscriptionDetails existe
+        if (!inscriptionDetails) {
+            console.error('Elemento inscriptionDetails no encontrado');
+            toggleLoader(false);
+            return;
+        }
+        
         // Obtener el nombre del estudiante
         let studentName = 'No asignado';
         if (inscription.student) {
@@ -291,7 +320,11 @@ async function handleViewInscription(event) {
         inscriptionDetails.appendChild(detailsContainer);
         
         // Mostrar el modal
-        detailsModal.style.display = 'block';
+        if (detailsModal) {
+            detailsModal.style.display = 'block';
+        } else {
+            console.error('Elemento detailsModal no encontrado');
+        }
     } catch (error) {
         console.error('Error al cargar detalles de inscripción:', error);
         showAlert('Error al cargar detalles de inscripción.', 'danger');
@@ -304,7 +337,11 @@ async function handleViewInscription(event) {
 function handleAddInscription() {
     resetForm();
     isEditing = false;
-    formTitle.textContent = 'Agregar Nueva Inscripción';
+    
+    if (formTitle) {
+        formTitle.textContent = 'Agregar Nueva Inscripción';
+    }
+    
     scrollToForm();
 }
 
@@ -322,9 +359,18 @@ async function handleEditInscription(event) {
         resetForm();
         
         // Llenar el formulario con los datos de la inscripción
-        document.getElementById('idInscription').value = inscription.idInscription;
-        document.getElementById('date').value = formatDateForInput(inscription.date);
-        document.getElementById('idStudent').value = inscription.idStudent || '';
+        const idInscriptionInput = document.getElementById('idInscription');
+        if (idInscriptionInput) {
+            idInscriptionInput.value = inscription.idInscription;
+        }
+        
+        if (dateInput) {
+            dateInput.value = formatDateForInput(inscription.date);
+        }
+        
+        if (studentSelect) {
+            studentSelect.value = inscription.idStudent || '';
+        }
         
         // Cargar los cursos asociados a esta inscripción
         selectedCourses = [];
@@ -352,7 +398,10 @@ async function handleEditInscription(event) {
         // Renderizar los cursos seleccionados
         renderSelectedCourses();
         
-        formTitle.textContent = 'Editar Inscripción';
+        if (formTitle) {
+            formTitle.textContent = 'Editar Inscripción';
+        }
+        
         scrollToForm();
     } catch (error) {
         console.error('Error al cargar inscripción para editar:', error);
@@ -367,19 +416,31 @@ function handleDeleteInscription(event) {
     currentInscriptionId = inscriptionId;
     
     // Mostrar el modal de confirmación
-    deleteModal.style.display = 'block';
+    if (deleteModal) {
+        deleteModal.style.display = 'block';
+    } else {
+        console.error('Elemento deleteModal no encontrado');
+    }
 }
 
 // Función para renderizar los cursos seleccionados
 function renderSelectedCourses() {
+    // Verificar que el elemento container existe
+    if (!selectedCoursesContainer) {
+        console.error('Elemento selectedCoursesContainer no encontrado');
+        return;
+    }
+    
     selectedCoursesContainer.innerHTML = '';
     
     if (selectedCourses.length === 0) {
-        const noCourses = document.createElement('p');
-        noCourses.textContent = 'No hay cursos seleccionados.';
-        selectedCoursesContainer.appendChild(noCourses);
+        // Solo mostrar alert si no estamos en la inicialización
+        if (isEditing || document.getElementById('idInscription')?.value) {
+            showAlert('Debe agregar al menos un curso.', 'warning');
+        }
         return;
     }
+    
     
     const ul = document.createElement('ul');
     ul.className = 'selected-courses-list';
@@ -454,11 +515,18 @@ async function checkInscriptionExists(studentId, date, excludeId = null) {
 async function saveInscription(event) {
     event.preventDefault();
     
+    // Verificar que el formulario existe
+    if (!inscriptionForm) {
+        console.error('Elemento inscriptionForm no encontrado');
+        return;
+    }
+    
     // Obtener los datos del formulario
     const formData = new FormData(inscriptionForm);
     const inscriptionData = {
         date: formData.get('date'),
         idStudent: parseInt(formData.get('idStudent')),
+        idCourse: selectedCourses[0].idCourse, // Agregar el primer curso como curso principal
         details: selectedCourses.map(course => ({
             idCourse: course.idCourse
         }))
@@ -476,7 +544,7 @@ async function saveInscription(event) {
     }
     
     if (selectedCourses.length === 0) {
-        showAlert('Por favor agregue al menos un curso a la inscripción.', 'warning');
+        showAlert('Debe agregar al menos un curso.', 'warning');
         return;
     }
     
@@ -511,6 +579,7 @@ async function saveInscription(event) {
         resetForm();
     } catch (error) {
         console.error('Error al guardar inscripción:', error);
+        showAlert('Error al guardar la inscripción.', 'danger');
     } finally {
         toggleLoader(false);
     }
@@ -523,7 +592,10 @@ async function deleteInscription() {
         await api.inscriptions.delete(currentInscriptionId);
         
         // Cerrar el modal y recargar la lista
-        deleteModal.style.display = 'none';
+        if (deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+        
         showAlert('Inscripción eliminada con éxito.', 'success');
         await loadInscriptions();
     } catch (error) {
@@ -535,12 +607,23 @@ async function deleteInscription() {
 
 // Función para resetear el formulario
 function resetForm() {
+    if (!inscriptionForm) {
+        console.error('Elemento inscriptionForm no encontrado');
+        return;
+    }
+    
     inscriptionForm.reset();
-    document.getElementById('idInscription').value = '';
+    
+    const idInscriptionInput = document.getElementById('idInscription');
+    if (idInscriptionInput) {
+        idInscriptionInput.value = '';
+    }
     
     // Establecer la fecha de hoy por defecto
-    const today = new Date();
-    dateInput.value = today.toISOString().split('T')[0];
+    if (dateInput) {
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
+    }
     
     // Limpiar cursos seleccionados
     selectedCourses = [];
@@ -548,16 +631,30 @@ function resetForm() {
     
     currentInscriptionId = null;
     isEditing = false;
-    formTitle.textContent = 'Agregar Nueva Inscripción';
+    
+    if (formTitle) {
+        formTitle.textContent = 'Agregar Nueva Inscripción';
+    }
 }
 
 // Función para hacer scroll al formulario
 function scrollToForm() {
-    document.getElementById('inscriptionForm').scrollIntoView({ behavior: 'smooth' });
+    const formElement = document.getElementById('inscriptionForm');
+    if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.error('Elemento inscriptionForm no encontrado');
+    }
 }
 
 // Función para agregar un curso a la inscripción
 function handleAddCourse() {
+    // Verificar que el elemento select existe
+    if (!courseSelect) {
+        console.error('Elemento courseSelect no encontrado');
+        return;
+    }
+    
     const courseId = parseInt(courseSelect.value);
     
     if (!courseId) {
@@ -584,7 +681,10 @@ function handleAddCourse() {
         renderSelectedCourses();
         
         // Cerrar el modal
-        courseModal.style.display = 'none';
+        if (courseModal) {
+            courseModal.style.display = 'none';
+        }
+        
         courseSelect.value = '';
     }
 }
@@ -659,69 +759,142 @@ function showAlert(message, type) {
     }, 3000);
 }
 
-// Eventos
+// Manejador principal cuando el DOM está cargado
 document.addEventListener('DOMContentLoaded', async () => {
+    // Verificar que los elementos existen antes de usarlos
+    if (!inscriptionForm) {
+        console.error('Elemento inscriptionFormElement no encontrado. Asegúrate de que el ID es correcto en el HTML.');
+    }
+    
+    if (!studentSelect) {
+        console.error('Elemento idStudent no encontrado. Asegúrate de que el ID es correcto en el HTML.');
+    }
+    
+    if (!courseSelect) {
+        console.error('Elemento course-select no encontrado. Asegúrate de que el ID es correcto en el HTML.');
+    }
+    
     // Establecer la fecha de hoy por defecto
-    const today = new Date();
-    dateInput.value = today.toISOString().split('T')[0];
+    if (dateInput) {
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
+    }
     
-    // Cargar datos
-    await Promise.all([loadStudents(), loadCourses()]);
-    await loadInscriptions();
-    
-    // Renderizar cursos seleccionados iniciales
-    renderSelectedCourses();
-    
-    // Evento para el formulario
-    inscriptionForm.addEventListener('submit', saveInscription);
-    
-    // Evento para el botón de agregar inscripción
-    addInscriptionBtn.addEventListener('click', handleAddInscription);
-    
-    // Evento para el botón de cancelar
-    cancelBtn.addEventListener('click', resetForm);
-    
-    // Evento para el botón de agregar curso a la inscripción
-    addCourseToInscriptionBtn.addEventListener('click', () => {
-        courseModal.style.display = 'block';
-    });
-    
-    // Eventos para el modal de cursos
-    addCourseBtn.addEventListener('click', handleAddCourse);
-    cancelCourseBtn.addEventListener('click', () => {
-        courseModal.style.display = 'none';
-    });
-    closeCourseModal.addEventListener('click', () => {
-        courseModal.style.display = 'none';
-    });
-    
-    // Eventos para el modal de eliminación
-    confirmDeleteBtn.addEventListener('click', deleteInscription);
-    cancelDeleteBtn.addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-    closeDeleteModal.addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-    
-    // Eventos para el modal de detalles
-    closeDetailsBtn.addEventListener('click', () => {
-        detailsModal.style.display = 'none';
-    });
-    closeDetailsModal.addEventListener('click', () => {
-        detailsModal.style.display = 'none';
-    });
-    
-    // Cerrar modales al hacer clic fuera de ellos
-    window.addEventListener('click', (event) => {
-        if (event.target === courseModal) {
-            courseModal.style.display = 'none';
+    try {
+        // Cargar datos (con manejo de errores para cada llamada)
+        try {
+            await loadStudents();
+        } catch (err) {
+            console.error('Error en loadStudents:', err);
         }
-        if (event.target === deleteModal) {
-            deleteModal.style.display = 'none';
+        
+        try {
+            await loadCourses();
+        } catch (err) {
+            console.error('Error en loadCourses:', err);
         }
-        if (event.target === detailsModal) {
-            detailsModal.style.display = 'none';
+        
+        try {
+            await loadInscriptions();
+        } catch (err) {
+            console.error('Error en loadInscriptions:', err);
         }
-    });
+        
+        // Renderizar cursos seleccionados iniciales
+        renderSelectedCourses();
+        
+        // Asignar eventos solo si los elementos existen
+        if (inscriptionForm) {
+            inscriptionForm.addEventListener('submit', saveInscription);
+        }
+        
+        if (addInscriptionBtn) {
+            addInscriptionBtn.addEventListener('click', handleAddInscription);
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', resetForm);
+        }
+        
+        if (addCourseToInscriptionBtn) {
+            addCourseToInscriptionBtn.addEventListener('click', () => {
+                if (courseModal) {
+                    courseModal.style.display = 'block';
+                }
+            });
+        }
+        
+        // Eventos para el modal de cursos
+        if (addCourseBtn) {
+            addCourseBtn.addEventListener('click', handleAddCourse);
+        }
+        
+        if (cancelCourseBtn) {
+            cancelCourseBtn.addEventListener('click', () => {
+                if (courseModal) {
+                    courseModal.style.display = 'none';
+                }
+            });
+        }
+        
+        if (closeCourseModal) {
+            closeCourseModal.addEventListener('click', () => {
+                if (courseModal) {
+                    courseModal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Eventos para el modal de eliminación
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', deleteInscription);
+        }
+        
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', () => {
+                if (deleteModal) {
+                    deleteModal.style.display = 'none';
+                }
+            });
+        }        if (closeDeleteModal) {
+            closeDeleteModal.addEventListener('click', () => {
+                if (deleteModal) {
+                    deleteModal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Eventos para el modal de detalles
+        if (closeDetailsBtn) {
+            closeDetailsBtn.addEventListener('click', () => {
+                if (detailsModal) {
+                    detailsModal.style.display = 'none';
+                }
+            });
+        }
+        
+        if (closeDetailsModal) {
+            closeDetailsModal.addEventListener('click', () => {
+                if (detailsModal) {
+                    detailsModal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Cerrar modales al hacer clic fuera de ellos
+        window.addEventListener('click', (event) => {
+            if (courseModal && event.target === courseModal) {
+                courseModal.style.display = 'none';
+            }
+            if (deleteModal && event.target === deleteModal) {
+                deleteModal.style.display = 'none';
+            }
+            if (detailsModal && event.target === detailsModal) {
+                detailsModal.style.display = 'none';
+            }
+        });
+    } catch (error) {
+        console.error('Error durante la inicialización:', error);
+        showAlert('Ocurrió un error al inicializar la aplicación. Por favor, recarga la página.', 'danger');
+    }
 });
