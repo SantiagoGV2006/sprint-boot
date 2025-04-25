@@ -1,21 +1,38 @@
-// Configuración base para las peticiones a la API
-const API_BASE_URL = 'http://172.30.5.79:8080/api';
 
-// Objeto global para acceder a las funciones de la API
+const API_BASE_URL = 'http://172.30.7.93:8080/api'; // Asegúrate que esta URL es correcta
+
 const api = {
     /**
-     * Función para realizar peticiones GET a la API
-     * @param {string} endpoint - Endpoint de la API
-     * @returns {Promise} - Respuesta de la API
+     * @returns {string|null}
+     */
+    getAuthToken: function() {
+        return localStorage.getItem('auth_token');
+    },
+    
+    /**
+     * @param {string} endpoint 
+     * @returns {Promise} 
      */
     async get(endpoint) {
         try {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            const token = this.getAuthToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
             const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: headers
             });
+            
+            if (response.status === 401) {
+                window.location.href = '../html/login.html';
+                throw new Error('Sesión expirada o no autorizada');
+            }
             
             if (!response.ok) {
                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
@@ -30,20 +47,31 @@ const api = {
     },
     
     /**
-     * Función para realizar peticiones POST a la API
-     * @param {string} endpoint - Endpoint de la API
-     * @param {Object} data - Datos a enviar en la petición
-     * @returns {Promise} - Respuesta de la API
+     * @param {string} endpoint 
+     * @param {Object} data 
+     * @returns {Promise} 
      */
     async post(endpoint, data) {
         try {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            const token = this.getAuthToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
             const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: headers,
                 body: JSON.stringify(data)
             });
+            
+            if (response.status === 401) {
+                window.location.href = '../html/login.html';
+                throw new Error('Sesión expirada o no autorizada');
+            }
             
             if (response.status === 429) {
                 showAlert(`Has alcanzado el límite de creación de datos. Por favor, espera un momento.`, 'warning');
@@ -63,20 +91,31 @@ const api = {
     },
     
     /**
-     * Función para realizar peticiones PUT a la API
-     * @param {string} endpoint - Endpoint de la API
-     * @param {Object} data - Datos a enviar en la petición
-     * @returns {Promise} - Respuesta de la API
+     * @param {string} endpoint 
+     * @param {Object} data 
+     * @returns {Promise} 
      */
     async put(endpoint, data) {
         try {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            const token = this.getAuthToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
             const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: headers,
                 body: JSON.stringify(data)
             });
+            
+            if (response.status === 401) {
+                window.location.href = '../html/login.html';
+                throw new Error('Sesión expirada o no autorizada');
+            }
             
             if (response.status === 429) {
                 showAlert(`Has alcanzado el límite de actualización de datos. Por favor, espera un momento.`, 'warning');
@@ -96,18 +135,29 @@ const api = {
     },
     
     /**
-     * Función para realizar peticiones DELETE a la API
-     * @param {string} endpoint - Endpoint de la API
-     * @returns {Promise} - Respuesta de la API
+     * @param {string} endpoint 
+     * @returns {Promise} 
      */
     async delete(endpoint) {
         try {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            const token = this.getAuthToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
             const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: headers
             });
+            
+            if (response.status === 401) {
+                window.location.href = '../html/login.html';
+                throw new Error('Sesión expirada o no autorizada');
+            }
             
             if (response.status === 429) {
                 showAlert(`Has alcanzado el límite de eliminación de datos. Por favor, espera un momento.`, 'warning');
@@ -126,7 +176,6 @@ const api = {
         }
     },
     
-    // APIs específicas para cada entidad
     students: {
         getAll: () => api.get('students'),
         getById: (id) => api.get(`students/${id}`),
@@ -156,7 +205,7 @@ const api = {
         getById: (id) => api.get(`inscriptions/${id}`),
         create: (inscription) => api.post('inscriptions', inscription),
         update: (id, inscription) => api.put(`inscriptions/${id}`, inscription),
-        delete: (id) => api.delete(`students/${id}`)
+        delete: (id) => api.delete(`inscriptions/${id}`)
     },
     
     inscriptionDetails: {
@@ -170,39 +219,44 @@ const api = {
         delete: (id) => api.delete(`inscription-details/${id}`),
         deleteByInscriptionAndCourse: (inscriptionId, courseId) => 
             api.delete(`inscription-details/inscription/${inscriptionId}/course/${courseId}`)
+    },
+    
+    auth: {
+        login: (credentials) => api.post('auth/login', credentials),
+        register: (userData) => api.post('auth/register', userData)
     }
 };
 
 /**
- * Función para mostrar una alerta al usuario
- * @param {string} message - Mensaje a mostrar
- * @param {string} type - Tipo de alerta: success, danger o warning
+ * @param {string} message 
+ * @param {string} type 
  */
 function showAlert(message, type = 'success') {
-    // Si ya existe una alerta, la eliminamos
     const existingAlert = document.querySelector('.alert');
     if (existingAlert) {
         existingAlert.remove();
     }
     
-    // Creamos el elemento de alerta
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
     alertDiv.textContent = message;
     
-    // Insertamos la alerta al principio del contenedor principal
     const container = document.querySelector('.container');
-    container.insertBefore(alertDiv, container.firstChild);
+    if (container) {
+        container.insertBefore(alertDiv, container.firstChild);
+    } else {
+        document.body.appendChild(alertDiv);
+    }
     
-    // La alerta desaparece después de 5 segundos
     setTimeout(() => {
-        alertDiv.remove();
+        if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
+        }
     }, 5000);
 }
 
 /**
- * Función para mostrar el spinner de carga
- * @param {boolean} show - Indica si mostrar u ocultar el spinner
+ * @param {boolean} show 
  */
 function toggleLoader(show = true) {
     const loader = document.querySelector('.loader');
@@ -212,9 +266,8 @@ function toggleLoader(show = true) {
 }
 
 /**
- * Función para formatear fechas a formato local
- * @param {string} dateString - Fecha en formato ISO
- * @returns {string} - Fecha formateada
+ * @param {string} dateString 
+ * @returns {string} 
  */
 function formatDate(dateString) {
     if (!dateString) return '';
@@ -223,9 +276,8 @@ function formatDate(dateString) {
 }
 
 /**
- * Función para validar un email
- * @param {string} email - Email a validar
- * @returns {boolean} - True si el email es válido
+ * @param {string} email 
+ * @returns {boolean} 
  */
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -233,9 +285,8 @@ function isValidEmail(email) {
 }
 
 /**
- * Función para confirmar una acción
- * @param {string} message - Mensaje a mostrar
- * @returns {boolean} - True si el usuario confirma
+ * @param {string} message 
+ * @returns {boolean} 
  */
 function confirmAction(message = '¿Está seguro de realizar esta acción?') {
     return confirm(message);
