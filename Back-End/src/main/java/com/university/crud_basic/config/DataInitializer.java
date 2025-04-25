@@ -1,4 +1,4 @@
-package com.sena.crud_basic.config;
+package com.university.crud_basic.config;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,11 +8,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.sena.crud_basic.model.ERole;
-import com.sena.crud_basic.model.RoleDTO;
-import com.sena.crud_basic.model.UserDTO;
-import com.sena.crud_basic.repository.RoleRepository;
-import com.sena.crud_basic.repository.UserRepository;
+import com.university.crud_basic.model.ERole;
+import com.university.crud_basic.model.RoleDTO;
+import com.university.crud_basic.model.UserDTO;
+import com.university.crud_basic.repository.RoleRepository;
+import com.university.crud_basic.repository.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -60,7 +60,7 @@ public class DataInitializer implements CommandLineRunner {
             adminUser.setFirstName("Admin");
             adminUser.setLastName("Sistema");
             adminUser.setUsername("admin");
-            adminUser.setEmail("admin@restaurant.com");
+            adminUser.setEmail("admin@university.com");
             adminUser.setPassword(passwordEncoder.encode("Admin@123"));
             
             // Asignar rol de administrador

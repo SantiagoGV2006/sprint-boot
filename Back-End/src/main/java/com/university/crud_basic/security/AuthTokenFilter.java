@@ -1,4 +1,4 @@
-package com.sena.crud_basic.security;
+package com.university.crud_basic.security;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.sena.crud_basic.security.services.UserDetailsServiceImpl;
+import com.university.crud_basic.security.services.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -32,15 +32,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String jwt = getJwtFromCookies(request);
+            String jwt = getJwtFromRequest(request);
             
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                
-                // Opcional: Verificar los roles desde el token
-                // List<String> rolesFromToken = jwtUtils.getRolesFromJwtToken(jwt);
                 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -56,7 +53,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromCookies(HttpServletRequest request) {
+    private String getJwtFromRequest(HttpServletRequest request) {
+        // Primero intenta obtener el token de la cookie
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -65,6 +63,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 }
             }
         }
+        
+        // Si no hay cookie, intenta obtenerlo del header Authorization
+        String headerAuth = request.getHeader("Authorization");
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        
         return null;
     }
 }
