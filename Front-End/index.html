@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=html/index.html">
+    <title>Redireccionando...</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e4e4e4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+        .loader {
+            border: 6px solid #333;
+            border-radius: 50%;
+            border-top: 6px solid #7289da;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <h2>Redireccionando al sistema...</h2>
+    <p>Si no eres redirigido automáticamente, <a href="../html/index.html" style="color: #7289da;">haz clic aquí</a>.</p>
+    
+    <script>
+        // Redirigir inmediatamente
+        window.location.href = 'html/index.html';
+    </script>
+</body>
+</html>
