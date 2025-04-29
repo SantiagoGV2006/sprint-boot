@@ -1,6 +1,7 @@
 package com.university.crud_basic.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "inscription_detail")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class InscriptionDetailDTO {
     
     @Id
@@ -22,7 +24,7 @@ public class InscriptionDetailDTO {
     private Integer id;
     
     @Column(name = "id_inscription")
-    @NotNull(message = "El ID de inscripción no puede estar vacío")
+    // Eliminamos la anotación @NotNull para permitir la creación en cascada
     private Integer idInscription;
     
     @Column(name = "id_course")
@@ -31,6 +33,7 @@ public class InscriptionDetailDTO {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_course", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private CourseDTO course;
     
     @ManyToOne(fetch = FetchType.LAZY)

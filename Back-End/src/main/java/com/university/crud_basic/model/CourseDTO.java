@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "course")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CourseDTO {
     
     @Id
@@ -44,7 +45,7 @@ public class CourseDTO {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProfessorDTO professor;
 
-    // Getters y setters se mantienen igual
+    // Getters y setters
     public Integer getIdCourse() {
         return idCourse;
     }

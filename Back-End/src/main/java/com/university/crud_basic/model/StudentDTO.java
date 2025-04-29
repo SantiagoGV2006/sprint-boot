@@ -1,5 +1,7 @@
 package com.university.crud_basic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "student")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StudentDTO {
     
     @Id
@@ -45,7 +48,7 @@ public class StudentDTO {
     @Size(max = 100, message = "El email no puede exceder 100 caracteres")
     private String email;
 
-    // Getters y setters se mantienen igual
+    // Getters y setters
     public Integer getIdStudent() {
         return idStudent;
     }

@@ -1,5 +1,7 @@
 // Configuración base para las peticiones a la API
-const API_BASE_URL = 'http://172.30.7.93:8080/api';
+const API_BASE_URL = 'http://localhost:8080/api';
+// Si necesitas usar una IP específica, puedes cambiar la línea anterior por:
+// const API_BASE_URL = 'http://172.30.7.93:8080/api';
 
 // Objeto global para acceder a las funciones de la API
 const api = {
@@ -18,7 +20,8 @@ const api = {
             });
             
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`Error: ${response.status} - ${errorData.message || response.statusText}`);
             }
             
             return await response.json();
@@ -51,7 +54,8 @@ const api = {
             }
             
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`Error: ${response.status} - ${errorData.message || response.statusText}`);
             }
             
             return await response.json();
@@ -84,7 +88,8 @@ const api = {
             }
             
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`Error: ${response.status} - ${errorData.message || response.statusText}`);
             }
             
             return await response.json();
@@ -115,7 +120,8 @@ const api = {
             }
             
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`Error: ${response.status} - ${errorData.message || response.statusText}`);
             }
             
             return true;
@@ -156,7 +162,7 @@ const api = {
         getById: (id) => api.get(`inscriptions/${id}`),
         create: (inscription) => api.post('inscriptions', inscription),
         update: (id, inscription) => api.put(`inscriptions/${id}`, inscription),
-        delete: (id) => api.delete(`students/${id}`)
+        delete: (id) => api.delete(`inscriptions/${id}`) // Corregido: era students/${id}
     },
     
     inscriptionDetails: {
@@ -198,45 +204,4 @@ function showAlert(message, type = 'success') {
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
-}
-
-/**
- * Función para mostrar el spinner de carga
- * @param {boolean} show - Indica si mostrar u ocultar el spinner
- */
-function toggleLoader(show = true) {
-    const loader = document.querySelector('.loader');
-    if (!loader) return;
-    
-    loader.style.display = show ? 'block' : 'none';
-}
-
-/**
- * Función para formatear fechas a formato local
- * @param {string} dateString - Fecha en formato ISO
- * @returns {string} - Fecha formateada
- */
-function formatDate(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-}
-
-/**
- * Función para validar un email
- * @param {string} email - Email a validar
- * @returns {boolean} - True si el email es válido
- */
-function isValidEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-}
-
-/**
- * Función para confirmar una acción
- * @param {string} message - Mensaje a mostrar
- * @returns {boolean} - True si el usuario confirma
- */
-function confirmAction(message = '¿Está seguro de realizar esta acción?') {
-    return confirm(message);
 }

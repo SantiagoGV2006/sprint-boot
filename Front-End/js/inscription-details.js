@@ -1,5 +1,5 @@
-// Variables globales
-let inscriptions = [];
+// Variables globales - renombradas para evitar colisiones
+let inscriptionsList = [];  // Renombrado de "inscriptions" a "inscriptionsList"
 let courses = [];
 let details = [];
 let currentInscriptionId = null;
@@ -23,13 +23,13 @@ const detailLoader = document.getElementById('detailLoader');
 const deleteModal = document.getElementById('deleteModal');
 const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-const closeDeleteModal = deleteModal.querySelector('.close-modal');
+const closeDeleteModal = deleteModal ? deleteModal.querySelector('.close-modal') : null;
 
 // Función para cargar inscripciones
 async function loadInscriptions() {
     try {
         toggleLoader(true);
-        inscriptions = await api.inscriptions.getAll();
+        inscriptionsList = await api.inscriptions.getAll();  // Actualizado a inscriptionsList
         populateInscriptionSelect();
     } catch (error) {
         console.error('Error al cargar inscripciones:', error);
@@ -52,13 +52,19 @@ async function loadCourses() {
 
 // Función para llenar el select de inscripciones
 function populateInscriptionSelect() {
+    // Verificar que el elemento select existe
+    if (!inscriptionSelect) {
+        console.error('Elemento inscriptionSelect no encontrado');
+        return;
+    }
+    
     // Limpiar opciones actuales excepto la primera
     while (inscriptionSelect.options.length > 1) {
         inscriptionSelect.remove(1);
     }
     
     // Agregar opciones de inscripciones
-    inscriptions.forEach(inscription => {
+    inscriptionsList.forEach(inscription => {  // Actualizado a inscriptionsList
         const option = document.createElement('option');
         option.value = inscription.idInscription;
         
@@ -73,8 +79,17 @@ function populateInscriptionSelect() {
     });
 }
 
+// El resto del código permanece igual, solo asegúrate de reemplazar todas las referencias 
+// a "inscriptions" con "inscriptionsList"
+
 // Función para llenar el select de cursos
 function populateCourseSelect() {
+    // Verificar que el elemento select existe
+    if (!courseSelect) {
+        console.error('Elemento courseSelect no encontrado');
+        return;
+    }
+    
     // Limpiar opciones actuales excepto la primera
     while (courseSelect.options.length > 1) {
         courseSelect.remove(1);
@@ -433,34 +448,60 @@ function showAlert(message, type) {
 
 // Eventos
 document.addEventListener('DOMContentLoaded', async () => {
+    // Verificar que todos los elementos DOM necesarios existen
+    if (!inscriptionSelect) {
+        console.error('Elemento inscription-select no encontrado. Esta página requiere un elemento select con id "inscription-select".');
+        return;
+    }
+    
     // Cargar datos iniciales
-    await Promise.all([loadInscriptions(), loadCourses()]);
-    
-    // Evento para el select de inscripciones
-    inscriptionSelect.addEventListener('change', handleInscriptionSelect);
-    
-    // Evento para el formulario de agregar detalle
-    detailFormElement.addEventListener('submit', addCourseToInscription);
-    
-    // Evento para el botón de agregar detalle
-    addDetailBtn.addEventListener('click', handleAddDetail);
-    
-    // Evento para el botón de cancelar
-    cancelBtn.addEventListener('click', () => {
-        detailForm.style.display = 'none';
-    });
-    
-    // Eventos para el modal de eliminación
-    confirmDeleteBtn.addEventListener('click', deleteDetail);
-    cancelDeleteBtn.addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-    closeDeleteModal.addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-    window.addEventListener('click', (event) => {
-        if (event.target === deleteModal) {
-            deleteModal.style.display = 'none';
+    try {
+        await Promise.all([loadInscriptions(), loadCourses()]);
+        
+        // Evento para el select de inscripciones
+        inscriptionSelect.addEventListener('change', handleInscriptionSelect);
+        
+        // Evento para el formulario de agregar detalle
+        if (detailFormElement) {
+            detailFormElement.addEventListener('submit', addCourseToInscription);
         }
-    });
+        
+        // Evento para el botón de agregar detalle
+        if (addDetailBtn) {
+            addDetailBtn.addEventListener('click', handleAddDetail);
+        }
+        
+        // Evento para el botón de cancelar
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                detailForm.style.display = 'none';
+            });
+        }
+        
+        // Eventos para el modal de eliminación
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', deleteDetail);
+        }
+        
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+        }
+        
+        if (closeDeleteModal) {
+            closeDeleteModal.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+        }
+        
+        window.addEventListener('click', (event) => {
+            if (event.target === deleteModal) {
+                deleteModal.style.display = 'none';
+            }
+        });
+    } catch (error) {
+        console.error('Error durante la inicialización:', error);
+        showAlert('Error al inicializar la página. Por favor, recarga.', 'danger');
+    }
 });

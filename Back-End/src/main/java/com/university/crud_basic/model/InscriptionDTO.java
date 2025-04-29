@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +22,7 @@ import jakarta.validation.constraints.PastOrPresent;
 
 @Entity
 @Table(name = "inscription")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class InscriptionDTO {
     
     @Id
@@ -34,17 +37,27 @@ public class InscriptionDTO {
     @Column(name = "id_student")
     @NotNull(message = "Se debe asignar un estudiante a la inscripción")
     private Integer idStudent;
+
+    @Column(name = "id_course")
+    private Integer idCourse;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_student", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private StudentDTO student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_course", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private CourseDTO course;
     
     @OneToMany(mappedBy = "inscription", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"inscription", "hibernateLazyInitializer", "handler"})
     private List<InscriptionDetailDTO> details = new ArrayList<>();
+
+    public Integer getIdInscription() {
+        return idInscription;
+    }
 
     public void setIdInscription(Integer idInscription) {
         this.idInscription = idInscription;
@@ -80,10 +93,6 @@ public class InscriptionDTO {
 
     public void setDetails(List<InscriptionDetailDTO> details) {
         this.details = details;
-    }
-
-    public Integer getIdInscription() {
-        return idInscription;
     }
 
     public Integer getIdCourse() {

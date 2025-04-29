@@ -521,18 +521,29 @@ async function saveInscription(event) {
         return;
     }
     
+    // Validar que haya al menos un curso seleccionado
+    if (selectedCourses.length === 0) {
+        showAlert('Debe agregar al menos un curso a la inscripción.', 'warning');
+        return;
+    }
+    
     // Obtener los datos del formulario
     const formData = new FormData(inscriptionForm);
+    
+    // Construir objeto de inscripción
     const inscriptionData = {
         date: formData.get('date'),
         idStudent: parseInt(formData.get('idStudent')),
-        idCourse: selectedCourses[0].idCourse, // Agregar el primer curso como curso principal
+        // La propiedad idCourse ahora es opcional en el modelo pero requerida por el API
+        // Usamos el id del primer curso como curso principal
+        idCourse: selectedCourses[0]?.idCourse || null,
+        // Importante: Incluir los detalles de cursos
         details: selectedCourses.map(course => ({
             idCourse: course.idCourse
         }))
     };
     
-    // Validar el formulario
+    // Validar los datos requeridos
     if (!inscriptionData.date) {
         showAlert('Por favor seleccione una fecha.', 'warning');
         return;
@@ -543,24 +554,14 @@ async function saveInscription(event) {
         return;
     }
     
-    if (selectedCourses.length === 0) {
-        showAlert('Debe agregar al menos un curso.', 'warning');
-        return;
-    }
-    
-    // Verificar si ya existe una inscripción para el mismo estudiante en la misma fecha
-    const inscriptionExists = await checkInscriptionExists(
-        inscriptionData.idStudent, 
-        inscriptionData.date, 
-        isEditing ? currentInscriptionId : null
-    );
-    
-    if (inscriptionExists) {
-        showAlert('Ya existe una inscripción para este estudiante en la fecha seleccionada.', 'warning');
+    if (!inscriptionData.idCourse) {
+        showAlert('Debe agregar al menos un curso como curso principal.', 'warning');
         return;
     }
     
     try {
+        console.log('Enviando datos de inscripción:', JSON.stringify(inscriptionData, null, 2));
+        
         toggleLoader(true);
         let result;
         
@@ -579,7 +580,7 @@ async function saveInscription(event) {
         resetForm();
     } catch (error) {
         console.error('Error al guardar inscripción:', error);
-        showAlert('Error al guardar la inscripción.', 'danger');
+        showAlert('Error al guardar la inscripción: ' + (error.message || 'Error desconocido'), 'danger');
     } finally {
         toggleLoader(false);
     }
